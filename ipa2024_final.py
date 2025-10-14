@@ -1,7 +1,7 @@
 #######################################################################################
-# Yourname:
-# Your student ID:
-# Your GitHub Repo: 
+# Yourname: Wanwisa Sathitooukuthai
+# Your student ID: 66070179
+# Your GitHub Repo: https://github.com/Wanwisa179/IPA2024-Final-66070179.git
 
 #######################################################################################
 # 1. Import libraries for API requests, JSON formatting, time, os, (restconf_final or netconf_final), netmiko_final, and ansible_final.
