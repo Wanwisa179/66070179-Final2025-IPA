@@ -9,6 +9,7 @@ import requests
 import json
 import time
 
+from netmiko_final import gigabit_status
 from restconf_final import create, status, enable, disable, delete
 
 #######################################################################################
@@ -92,8 +93,8 @@ while True:
             re_data = disable()
         elif command == "status":
             re_data = status()
-        #  elif command == "gigabit_status":
-        #     <!!!REPLACEME with code for gigabit_status command!!!>
+        elif command == "gigabit_status":
+            re_data = gigabit_status()
         # elif command == "showrun":
         #     <!!!REPLACEME with code for showrun command!!!>
         else:
