@@ -1,11 +1,26 @@
 import subprocess
+import os
 
 def showrun():
     # read https://www.datacamp.com/tutorial/python-subprocess to learn more about subprocess
-    command = ['<!!!REPLACEME with ansible command to run playbook!!!>', '<!!!REPLACEME with playbook yaml file!!!>']
+    command = ["ansible-playbook", "playbook.yaml"]
     result = subprocess.run(command, capture_output=True, text=True)
-    result = result.stdout
-    if 'ok=2' in result:
-        return <!!!REPLACEME!!!>
+
+    print(result.stdout)
+    print(result.stderr)
+
+    output = result.stdout
+    if "failed=0" in output:
+        current_dir = os.getcwd()
+        txt_files = [
+            f for f in os.listdir(current_dir)
+            if f.startswith("show_run_66070179_") and f.endswith(".txt")
+        ]
+        if txt_files:
+            file_path = os.path.join(current_dir, txt_files[0])
+            print("found backup")
+            return file_path
+        else:
+            return "Error: No backup file found"
     else:
-        return '<!!!REPLACEME!!!>
+        return 'Error: Ansible'

@@ -8,7 +8,10 @@
 import requests
 import json
 import time
+import os
 
+from requests_toolbelt import MultipartEncoder
+from ansible_final import showrun
 from netmiko_final import gigabit_status
 from restconf_final import create, status, enable, disable, delete
 
@@ -95,12 +98,12 @@ while True:
             re_data = status()
         elif command == "gigabit_status":
             re_data = gigabit_status()
-        # elif command == "showrun":
-        #     <!!!REPLACEME with code for showrun command!!!>
+        elif command == "showrun":
+            re_data = showrun()
         else:
             responseMessage = "Error: No command or unknown command"
         
-# 6. Complete the code to post the message to the Webex Teams room.
+    # 6. Complete the code to post the message to the Webex Teams room.
 
         # The Webex Teams POST JSON data for command showrun
         # - "roomId" is is ID of the selected room
@@ -114,42 +117,56 @@ while True:
         # Read Send a Message with Attachments Local File Attachments
         # https://developer.webex.com/docs/basics for more detail
 
-        # if command == "showrun" and responseMessage == 'ok':
-        #     filename = "<!!!REPLACEME with show run filename and path!!!>"
-        #     fileobject = <!!!REPLACEME with open file!!!>
-        #     filetype = "<!!!REPLACEME with Content-type of the file!!!>"
-        #     postData = {
-        #         "roomId": <!!!REPLACEME!!!>,
-        #         "text": "show running config",
-        #         "files": (<!!!REPLACEME!!!>, <!!!REPLACEME!!!>, <!!!REPLACEME!!!>),
-        #     }
-        #     postData = MultipartEncoder(<!!!REPLACEME!!!>)
-        #     HTTPHeaders = {
-        #     "Authorization": ACCESS_TOKEN,
-        #     "Content-Type": <!!!REPLACEME with postData Content-Type!!!>,
-        #     }
-        # other commands only send text, or no attached file.
-        # else:
-        #     postData = {"roomId": <!!!REPLACEME!!!>, "text": <!!!REPLACEME!!!>}
-        #     postData = json.dumps(postData)
+        if command == "showrun" and not re_data.startswith("Error"):
+            filename = re_data
+            fileobject = open(filename, 'rb')
+            filetype = "text/plain"
 
+            postData = MultipartEncoder({
+            "roomId": roomIdToGetMessages,
+            "text": "show running config",
+            "files": (os.path.basename(filename), fileobject, filetype)
+            })
+
+            HTTPHeaders = {
+                "Authorization": f"Bearer {ACCESS_TOKEN}",
+                "Content-Type": postData.content_type
+            }
+       
+        
+            r = requests.post(
+            "https://webexapis.com/v1/messages",
+            data=postData,
+            headers=HTTPHeaders,
+            )
+
+            fileobject.close()
+
+            if r.status_code == 200:
+                print("File sent successfully to Webex room")
+            else:
+                print("Failed to send file. Status: {r.status_code}")
+                print(r.text)
+
+        # other commands only send text, or no attached file.
         #     # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
         #     HTTPHeaders = {"Authorization": <!!!REPLACEME!!!>, "Content-Type": <!!!REPLACEME!!!>}   
 
         # Post the call to the Webex Teams message API.
-        sent_back = {
-            "roomId": roomIdToGetMessages,
-            "text" : re_data
-        }
+        if command != "showrun":
+            sent_back = {
+                "roomId": roomIdToGetMessages,
+                "text" : re_data
+            }
         
-        r = requests.post(
-            "https://webexapis.com/v1/messages",
-            data=json.dumps(sent_back),
-            headers=postHTTPHeader,
-        )
-        if not r.status_code == 200:
-            raise Exception(
-                "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=json.dumps(sent_back),
+                headers=postHTTPHeader,
             )
-        else:
-            print("✅ Message sent successfully!")
+            if not r.status_code == 200:
+                raise Exception(
+                    "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+                )
+            else:
+                print("Message sent successfully!")

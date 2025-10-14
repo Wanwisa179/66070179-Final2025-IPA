@@ -1,0 +1,23 @@
+---
+- name: AUTOMATIC BACKUP OF RUNNING-CONFIG
+  hosts: CSR1kv
+  gather_facts: false
+  connection: network_cli
+ 
+  tasks:
+   - name: GET HOSTNAME
+     ios_command:
+        commands:
+          - show run | include hostname
+     register: hostname_out
+
+   - name: DISPLAYING THE RUNNING-CONFIG
+     ios_command:
+       commands:
+         - show running-config  
+     register: config
+ 
+   - name: SAVE OUTPUT TO ./backups/
+     copy:
+       content: "{{ config.stdout[0] }}"
+       dest: "show_run_66070179_{{ hostname_out.stdout[0].split()[1] }}.txt"
