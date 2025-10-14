@@ -23,7 +23,7 @@ def create():
         "ietf-ip:ipv4": {
             "address": [
                 {
-                    "ip": "172.1.79.1,
+                    "ip": "172.1.79.1",
                     "netmask": "255.255.255.0"
                 }
             ]
@@ -74,7 +74,7 @@ def enable():
         "ietf-ip:ipv4": {
             "address": [
                 {
-                    "ip": "172.1.79.1,
+                    "ip": "172.1.79.1",
                     "netmask": "255.255.255.0"
                 }
             ]
@@ -109,7 +109,7 @@ def disable():
         "ietf-ip:ipv4": {
             "address": [
                 {
-                    "ip": "172.1.79.1,
+                    "ip": "172.1.79.1",
                     "netmask": "255.255.255.0"
                 }
             ]
@@ -138,8 +138,7 @@ def status():
     api_url_status = "https://192.168.229.131/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070179"
 
     resp = requests.get(
-        api_url_status, 
-        data=json.dumps(yangConfig), 
+        api_url_status,
         auth=basicauth, 
         headers=headers, 
         verify=False
