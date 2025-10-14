@@ -5,6 +5,8 @@ requests.packages.urllib3.disable_warnings()
 # Router IP Address is 10.0.15.181-184
 api_url = "https://192.168.229.131/restconf"
 
+api_url_status = "https://192.168.229.131/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070179"
+
 # the RESTCONF HTTP headers, including the Accept and Content-Type
 # Two YANG data formats (JSON and XML) work with RESTCONF 
 headers = { "Accept": "application/yang-data+json", 
@@ -32,20 +34,31 @@ def create():
         }
     } 
 
-    resp = requests.put(
-        api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179", 
-        data=json.dumps(yangConfig), 
+    resp = requests.get(
+        api_url_status,
         auth=basicauth, 
         headers=headers, 
         verify=False
         )
 
     if(resp.status_code >= 200 and resp.status_code <= 299):
-        print("STATUS OK: {}".format(resp.status_code))
-        return "Interface loopback 66070179 is created successfully"
-    else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return "Cannot create: Interface loopback 66070179"
+    else:
+        resp = requests.put(
+            api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179", 
+            data=json.dumps(yangConfig), 
+            auth=basicauth, 
+            headers=headers, 
+            verify=False
+            )
+
+        if(resp.status_code >= 200 and resp.status_code <= 299):
+            print("STATUS OK: {}".format(resp.status_code))
+            return "Interface loopback 66070179 is created successfully"
+        else:
+            print('Error. Status Code: {}'.format(resp.status_code))
+            return "Cannot create: Interface loopback 66070179"
 
 
 def delete():
@@ -83,17 +96,27 @@ def enable():
         }
     }
 
-    resp = requests.put(
-        api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179", 
-        data=json.dumps(yangConfig), 
+    resp = requests.get(
+        api_url_status,
         auth=basicauth, 
         headers=headers, 
         verify=False
         )
 
     if(resp.status_code >= 200 and resp.status_code <= 299):
-        print("STATUS OK: {}".format(resp.status_code))
-        return "Interface loopback 66070179 is enabled successfully"
+        resp = requests.put(
+            api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179", 
+            data=json.dumps(yangConfig), 
+            auth=basicauth, 
+            headers=headers, 
+            verify=False
+            )
+        if(resp.status_code >= 200 and resp.status_code <= 299):
+            print("STATUS OK: {}".format(resp.status_code))
+            return "Interface loopback 66070179 is enabled successfully"
+        else:
+            print('Error. Status Code: {}'.format(resp.status_code))
+            return "Cannot enable: Interface loopback 66070179"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return "Cannot enable: Interface loopback 66070179"
@@ -118,24 +141,34 @@ def disable():
         }
     }
 
-    resp = requests.put(
-        api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179", 
-        data=json.dumps(yangConfig), 
+    resp = requests.get(
+        api_url_status,
         auth=basicauth, 
         headers=headers, 
         verify=False
         )
 
     if(resp.status_code >= 200 and resp.status_code <= 299):
-        print("STATUS OK: {}".format(resp.status_code))
-        return "Interface loopback 66070179 is shutdowned successfully"
+        resp = requests.put(
+            api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179", 
+            data=json.dumps(yangConfig), 
+            auth=basicauth, 
+            headers=headers, 
+            verify=False
+            )
+
+        if(resp.status_code >= 200 and resp.status_code <= 299):
+            print("STATUS OK: {}".format(resp.status_code))
+            return "Interface loopback 66070179 is shutdowned successfully"
+        else:
+            print('Error. Status Code: {}'.format(resp.status_code))
+            return "Cannot shutdown: Interface loopback 66070179"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return "Cannot shutdown: Interface loopback 66070179"
 
 
 def status():
-    api_url_status = "https://192.168.229.131/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070179"
 
     resp = requests.get(
         api_url_status,

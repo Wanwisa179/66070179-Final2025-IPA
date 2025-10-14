@@ -17,7 +17,7 @@ from restconf_final import create, status, enable, disable, delete
 # ACCESS_TOKEN = os.environ."<!!!REPLACEME with os.environ method and environment variable!!!>"
 
 
-ACCESS_TOKEN = ""
+ACCESS_TOKEN = "YTliN2VkMjctY2IxNS00N2Q5LTkwMmMtNDA3ZjgyYjlmZGM0YzYzMTM5ZjQtNTY2_P0A1_db87020d-5ad1-4ed2-96a6-836699bf45f3"
 
 #######################################################################################
 # 3. Prepare parameters get the latest message for messages API.
@@ -38,6 +38,8 @@ while True:
 
     # the Webex Teams HTTP header, including the Authoriztion
     getHTTPHeader = {"Authorization": 'Bearer {}'.format(ACCESS_TOKEN)}
+
+    postHTTPHeader = {"Authorization": 'Bearer {}'.format(ACCESS_TOKEN),"Content-Type": "application/json"}
 
     # 4. Provide the URL to the Webex Teams messages API, and extract location from the received message.
     
@@ -81,15 +83,15 @@ while True:
     # 5. Complete the logic for each command
 
         if command == "create":
-            create()   
+            re_data = create()   
         elif command == "delete":
-            delete()
+            re_data = delete()
         elif command == "enable":
-            enable()
+            re_data = enable()
         elif command == "disable":
-            disable()
+            re_data = disable()
         elif command == "status":
-            status()
+            re_data = status()
         #  elif command == "gigabit_status":
         #     <!!!REPLACEME with code for gigabit_status command!!!>
         # elif command == "showrun":
@@ -133,13 +135,20 @@ while True:
         #     # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
         #     HTTPHeaders = {"Authorization": <!!!REPLACEME!!!>, "Content-Type": <!!!REPLACEME!!!>}   
 
-        # # Post the call to the Webex Teams message API.
-        # r = requests.post(
-        #     "<!!!REPLACEME with URL of Webex Teams Messages API!!!>",
-        #     data=<!!!REPLACEME!!!>,
-        #     headers=<!!!REPLACEME!!!>,
-        # )
-        # if not r.status_code == 200:
-        #     raise Exception(
-        #         "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
-        #     )
+        # Post the call to the Webex Teams message API.
+        sent_back = {
+            "roomId": roomIdToGetMessages,
+            "text" : re_data
+        }
+        
+        r = requests.post(
+            "https://webexapis.com/v1/messages",
+            data=json.dumps(sent_back),
+            headers=postHTTPHeader,
+        )
+        if not r.status_code == 200:
+            raise Exception(
+                "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+            )
+        else:
+            print("✅ Message sent successfully!")
