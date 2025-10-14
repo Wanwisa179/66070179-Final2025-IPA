@@ -10,6 +10,7 @@ import json
 import time
 import os
 
+from dotenv import load_dotenv
 from requests_toolbelt import MultipartEncoder
 from ansible_final import showrun
 from netmiko_final import gigabit_status
@@ -20,16 +21,21 @@ from restconf_final import create, status, enable, disable, delete
 
 # ACCESS_TOKEN = os.environ."<!!!REPLACEME with os.environ method and environment variable!!!>"
 
+load_dotenv()
 
-ACCESS_TOKEN = "YTliN2VkMjctY2IxNS00N2Q5LTkwMmMtNDA3ZjgyYjlmZGM0YzYzMTM5ZjQtNTY2_P0A1_db87020d-5ad1-4ed2-96a6-836699bf45f3"
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
+if ACCESS_TOKEN is None:
+    raise ValueError("ACCESS_TOKEN not found. Please set it in .env or environment variables.")
 #######################################################################################
 # 3. Prepare parameters get the latest message for messages API.
 
 # Defines a variable that will hold the roomId
 roomIdToGetMessages = (
-    "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vMTE4NWE1NjAtYTkwNC0xMWYwLTgyM2ItOGY0Yzc1NDlkYjM0"
+    "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vYmQwODczMTAtNmMyNi0xMWYwLWE1MWMtNzkzZDM2ZjZjM2Zm"
 )
+
+last_message_id = None
 
 while True:
     # always add 1 second of delay to the loop to not go over a rate limit of API calls
@@ -71,7 +77,14 @@ while True:
 
     # store the array of messages
     messages = json_data["items"]
-    
+    message_id = messages[0]["id"]
+
+    if message_id == last_message_id:
+        continue
+    else:
+        last_message_id = message_id  # จำ ID ไว้
+
+
     # store the text of the first message in the array
     message = messages[0]["text"]
     print("Received message: " + message)

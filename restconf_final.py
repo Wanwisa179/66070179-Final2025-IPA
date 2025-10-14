@@ -3,9 +3,9 @@ import requests
 requests.packages.urllib3.disable_warnings()
 
 # Router IP Address is 10.0.15.181-184
-api_url = "https://192.168.229.131/restconf"
+api_url = "https://10.0.15.61/restconf"
 
-api_url_status = "https://192.168.229.131/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070179"
+api_url_status = "https://10.0.15.61/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070179"
 
 # the RESTCONF HTTP headers, including the Accept and Content-Type
 # Two YANG data formats (JSON and XML) work with RESTCONF 
