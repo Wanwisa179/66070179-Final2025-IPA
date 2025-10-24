@@ -68,30 +68,49 @@ def net_delete(ip):
         return "Cannot delete: Interface loopback 66070179 (checked by Netconf)"
 
 
-# def net_enable():
-#     netconf_config = """<!!!REPLACEME with YANG data!!!>"""
+def net_enable(ip):
+    netconf_config = """
+    <config>
+      <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+        <interface>
+          <name>Loopback66070179</name>
+          <enabled>true</enabled>
+        </interface>
+      </interfaces>
+    </config>
+    """
+    try:
+        with netconf_connect(ip) as m:
+            reply = m.edit_config(target="running", config=netconf_config)
+            if '<ok/>' in reply.xml:
+                return "Interface loopback 66070179 is enabled successfully using Netconf"
+            else:
+                return "Cannot enable: Interface loopback 66070179 (checked by Netconf)"
+    except Exception as e:
+        print("Error:", e)
+        return "Cannot enable: Interface loopback 66070179 (checked by Netconf)"
 
-#     try:
-#         netconf_reply = netconf_edit_config(netconf_config)
-#         xml_data = netconf_reply.xml
-#         print(xml_data)
-#         if '<ok/>' in xml_data:
-#             return "<!!!REPLACEME with proper message!!!>"
-#     except:
-#         print("Error!")
-
-
-# def net_disable():
-#     netconf_config = """<!!!REPLACEME with YANG data!!!>"""
-
-#     try:
-#         netconf_reply = netconf_edit_config(netconf_config)
-#         xml_data = netconf_reply.xml
-#         print(xml_data)
-#         if '<ok/>' in xml_data:
-#             return "<!!!REPLACEME with proper message!!!>"
-#     except:
-#         print("Error!")
+def net_disable(ip):
+    netconf_config = """
+    <config>
+      <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+        <interface>
+          <name>Loopback66070179</name>
+          <enabled>false</enabled>
+        </interface>
+      </interfaces>
+    </config>
+    """
+    try:
+        with netconf_connect(ip) as m:
+            reply = m.edit_config(target="running", config=netconf_config)
+            if '<ok/>' in reply.xml:
+                return "Interface loopback 66070179 is shutdowned successfully using Netconf"
+            else:
+                return "Cannot shutdown: Interface loopback 66070179 (checked by Netconf)"
+    except Exception as e:
+        print("Error:", e)
+        return "Cannot shutdown: Interface loopback 66070179 (checked by Netconf)"
 
 # def netconf_edit_config(netconf_config):
 #     return  m.<!!!REPLACEME with the proper Netconf operation!!!>(target="<!!!REPLACEME with NETCONF Datastore!!!>", config=<!!!REPLACEME with netconf_config!!!>)
