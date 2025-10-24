@@ -110,6 +110,7 @@ while True:
                 )
             else:
                 print("Message sent successfully!")
+            continue
 
         command = (message.split())[2]
         print(command)
