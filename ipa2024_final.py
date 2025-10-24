@@ -94,7 +94,26 @@ while True:
     if message.startswith("/66070179 "):
 
         # extract the command
-        command = (message.split())[1]
+        ip = (message.split())[1]
+        if ip != "10.0.15.61" or ip != "10.0.15.62" or ip != "10.0.15.63" or ip != "10.0.15.64" or ip != "10.0.15.65":
+            sent_back = {
+                "roomId": roomIdToGetMessages,
+                "text" : " Error: No IP specified"
+            }
+        
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=json.dumps(sent_back),
+                headers=postHTTPHeader,
+            )
+            if not r.status_code == 200:
+                raise Exception(
+                    "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+                )
+            else:
+                print("Message sent successfully!")
+
+        command = (message.split())[2]
         print(command)
 
     # 5. Complete the logic for each command

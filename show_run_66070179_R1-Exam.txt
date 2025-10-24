@@ -1,9 +1,8 @@
 Building configuration...
 
-Current configuration : 4196 bytes
+Current configuration : 5504 bytes
 !
-! Last configuration change at 22:03:00 UTC Tue Oct 14 2025 by NETCONF
-! NVRAM config last updated at 14:31:26 UTC Wed Oct 8 2025
+! Last configuration change at 13:22:21 UTC Sun Oct 19 2025 by NETCONF
 !
 version 16.9
 service timestamps debug datetime msec
@@ -132,17 +131,73 @@ redundancy
 ! 
 !
 !
+interface Loopback1
+ ip address 10.1.1.1 255.255.255.0
+!
 interface Loopback100
  description Loopback 100 created via NETCONF
  ip address 10.100.100.100 255.255.255.255
 !
-interface Loopback66070179
- description My final2024 loopback
- ip address 172.1.79.1 255.255.255.0
+interface Loopback65070030
+ ip address 172.30.30.1 255.255.255.0
+!
+interface Loopback66070007
+ description Loopback for student 66070007
+ ip address 172.0.7.1 255.255.255.0
+!
+interface Loopback66070024
+ description Interface for student 66070024
+ ip address 172.0.24.1 255.255.255.0
+!
+interface Loopback66070039
+ description Created by student 66070039
+ ip address 172.0.39.1 255.255.255.0
+!
+interface Loopback66070046
+ ip address 192.168.46.1 255.255.255.0
+ shutdown
+!
+interface Loopback66070052
+ description Loopback for student 66070052
+ ip address 172.0.52.1 255.255.255.0
+!
+interface Loopback66070101
+ description Created by 66070101
+ ip address 172.1.1.1 255.255.255.0
+!
+interface Loopback66070118
+ description Interface created by RESTCONF Bot
+ ip address 172.1.18.1 255.255.255.0
+!
+interface Loopback66070119
+ description loopback for 66070119
+ ip address 172.1.19.1 255.255.255.0
+!
+interface Loopback66070124
+ ip address 172.1.24.1 255.255.255.0
+!
+interface Loopback66070200
+ ip address 172.2.0.1 255.255.255.0
+ shutdown
 !
 interface Loopback66070218
  ip address 10.2.18.1 255.255.255.0
  shutdown
+!
+interface Loopback66070221
+ ip address 172.2.21.1 255.255.255.0
+!
+interface Loopback66070225
+ description Ola
+ ip address 172.2.25.1 255.255.255.0
+!
+interface Loopback66070246
+ description Configured by RESTCONF
+ ip address 172.3.25.1 255.255.255.0
+!
+interface Loopback66070247
+ description Loopback interface for 66070247
+ ip address 172.2.47.1 255.255.255.0
 !
 interface GigabitEthernet1
  ip address 10.0.15.61 255.255.255.0
@@ -165,8 +220,7 @@ interface GigabitEthernet3
  no mop sysid
 !
 interface GigabitEthernet4
- no ip address
- shutdown
+ ip address 222.222.222.222 255.255.255.0
  negotiation auto
  no mop enabled
  no mop sysid

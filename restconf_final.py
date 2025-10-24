@@ -3,7 +3,7 @@ import requests
 requests.packages.urllib3.disable_warnings()
 
 # Router IP Address is 10.0.15.181-184
-api_url = "https://10.0.15.61/restconf"
+api_list = {"https://10.0.15.61/restconf", "https://10.0.15.62/restconf", "https://10.0.15.63/restconf", "https://10.0.15.64/restconf", "https://10.0.15.65/restconf"}
 
 api_url_status = "https://10.0.15.61/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070179"
 
@@ -14,8 +14,14 @@ headers = { "Accept": "application/yang-data+json",
            }
 basicauth = ("admin", "cisco")
 
+def what_ip(ip):
+    for ip_router in api_list:
+        ip_api = "https://"+ip+"/restconf"
+        if ip_router == ip_api:
+            return ip_router
 
-def create():
+def create(ip):
+    api_url = what_ip(ip)
     yangConfig = {
         "ietf-interfaces:interface": {
         "name": "Loopback66070179",
@@ -62,6 +68,7 @@ def create():
 
 
 def delete():
+    api_url = what_ip(ip)
     resp = requests.delete(
         api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179", 
         auth=basicauth, 
@@ -78,6 +85,7 @@ def delete():
 
 
 def enable():
+    api_url = what_ip(ip)
     yangConfig = {
         "ietf-interfaces:interface": {
         "name": "Loopback66070179",
@@ -123,6 +131,7 @@ def enable():
 
 
 def disable():
+    api_url = what_ip(ip)
     yangConfig = {
         "ietf-interfaces:interface": {
         "name": "Loopback66070179",
@@ -169,7 +178,7 @@ def disable():
 
 
 def status():
-
+    api_url = what_ip(ip)
     resp = requests.get(
         api_url_status,
         auth=basicauth, 
