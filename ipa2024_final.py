@@ -35,6 +35,8 @@ roomIdToGetMessages = os.getenv("room_id")
 
 last_message_id = None
 
+method = ""
+
 while True:
     # always add 1 second of delay to the loop to not go over a rate limit of API calls
     time.sleep(1)
@@ -93,7 +95,68 @@ while True:
 
         # extract the command
         ip = (message.split())[1]
-        if ip != "10.0.15.61" or ip != "10.0.15.62" or ip != "10.0.15.63" or ip != "10.0.15.64" or ip != "10.0.15.65":
+        if ip == "restconf":
+            method = ip
+
+            sent_back = {
+                "roomId": roomIdToGetMessages,
+                "text" : "Ok: Restconf"
+            }
+        
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=json.dumps(sent_back),
+                headers=postHTTPHeader,
+            )
+            if not r.status_code == 200:
+                raise Exception(
+                    "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+                )
+            else:
+                print("Message sent successfully!")
+
+            continue
+        elif ip == "netconf":
+            method = ip
+            
+            sent_back = {
+                "roomId": roomIdToGetMessages,
+                "text" : "Ok: Netconf"
+            }
+        
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=json.dumps(sent_back),
+                headers=postHTTPHeader,
+            )
+            if not r.status_code == 200:
+                raise Exception(
+                    "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+                )
+            else:
+                print("Message sent successfully!")
+
+            continue
+        elif method == "" and ip != "netconf" and ip != "restconf":
+            sent_back = {
+                "roomId": roomIdToGetMessages,
+                "text" : "Error: No method specified"
+            }
+        
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=json.dumps(sent_back),
+                headers=postHTTPHeader,
+            )
+            if not r.status_code == 200:
+                raise Exception(
+                    "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+                )
+            else:
+                print("Message sent successfully!")
+
+            continue
+        elif ip != "10.0.15.61" or ip != "10.0.15.62" or ip != "10.0.15.63" or ip != "10.0.15.64" or ip != "10.0.15.65":
             sent_back = {
                 "roomId": roomIdToGetMessages,
                 "text" : " Error: No IP specified"
