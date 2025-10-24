@@ -1,9 +1,14 @@
 import subprocess
 import os
 
-def showrun():
+def showrun(ip):
     # read https://www.datacamp.com/tutorial/python-subprocess to learn more about subprocess
-    command = ["ansible-playbook", "playbook.yaml"]
+    command = [
+        "ansible-playbook",
+        "playbook.yaml",
+        "--extra-vars",
+        f"target_ip={ip}"
+    ]
     result = subprocess.run(command, capture_output=True, text=True)
 
     print(result.stdout)

@@ -1,6 +1,6 @@
 ---
 - name: AUTOMATIC BACKUP OF RUNNING-CONFIG
-  hosts: CSR1kv
+  hosts: all
   gather_facts: false
   connection: network_cli
  
@@ -10,14 +10,17 @@
         commands:
           - show run | include hostname
      register: hostname_out
+     when: ansible_host == target_ip
 
    - name: DISPLAYING THE RUNNING-CONFIG
      ios_command:
        commands:
          - show running-config  
      register: config
- 
+     when: ansible_host == target_ip
+
    - name: SAVE OUTPUT TO ./backups/
      copy:
        content: "{{ config.stdout[0] }}"
        dest: "show_run_66070179_{{ hostname_out.stdout[0].split()[1] }}.txt"
+     when: ansible_host == target_ip
