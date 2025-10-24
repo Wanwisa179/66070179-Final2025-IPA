@@ -31,9 +31,7 @@ if ACCESS_TOKEN is None:
 # 3. Prepare parameters get the latest message for messages API.
 
 # Defines a variable that will hold the roomId
-roomIdToGetMessages = (
-    "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vYmQwODczMTAtNmMyNi0xMWYwLWE1MWMtNzkzZDM2ZjZjM2Zm"
-)
+roomIdToGetMessages = os.getenv("room_id")
 
 last_message_id = None
 
