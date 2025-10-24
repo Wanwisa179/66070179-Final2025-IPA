@@ -96,10 +96,32 @@ while True:
 
     # check if the text of the message starts with the magic character "/" followed by your studentID and a space and followed by a command name
     #  e.g.  "/66070123 create"
-    if message.startswith("/66070179 "):
+    if message.startswith("/66070179"):
         is_busy = True
         # extract the command
-        ip = (message.split())[1]
+        parts = message.split()
+        if len(parts) < 2:
+            sent_back = {
+                "roomId": roomIdToGetMessages,
+                "text" : "Error: No command found."
+            }
+        
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=json.dumps(sent_back),
+                headers=postHTTPHeader,
+            )
+            if not r.status_code == 200:
+                raise Exception(
+                    "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+                )
+            else:
+                print("Message sent successfully!")
+            is_busy = False
+            continue
+
+        ip = parts[1]
+
         if ip == "restconf":
             method = ip
 
@@ -182,7 +204,27 @@ while True:
             is_busy = False
             continue
 
-        command = (message.split())[2]
+        if len(parts) < 3:
+            sent_back = {
+                "roomId": roomIdToGetMessages,
+                "text" : "Error: No command found."
+            }
+        
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=json.dumps(sent_back),
+                headers=postHTTPHeader,
+            )
+            if not r.status_code == 200:
+                raise Exception(
+                    "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
+                )
+            else:
+                print("Message sent successfully!")
+        is_busy = False
+        continue
+
+        command = parts[2]
         print(command)
 
     # 5. Complete the logic for each command
