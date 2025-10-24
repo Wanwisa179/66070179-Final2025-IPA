@@ -36,6 +36,18 @@ def net_create(ip):
 
     try:
         with netconf_connect(ip) as m:
+            filter_check = """
+            <filter>
+              <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                <interface>
+                  <name>Loopback66070179</name>
+                </interface>
+              </interfaces>
+            </filter>
+            """
+            reply_check = m.get_config(source="running", filter=filter_check)
+            if "Loopback66070179" in reply_check.xml:
+                return "Cannot create: Interface loopback 66070179 (checked by Netconf)"
             reply = m.edit_config(target="running", config=netconf_config)
             if '<ok/>' in reply.xml:
                 return "Interface loopback 66070179 is created successfully using Netconf"
@@ -58,6 +70,19 @@ def net_delete(ip):
     """
     try:
         with netconf_connect(ip) as m:
+            filter_check = """
+            <filter>
+              <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                <interface>
+                  <name>Loopback66070179</name>
+                </interface>
+              </interfaces>
+            </filter>
+            """
+            reply_check = m.get_config(source="running", filter=filter_check)
+            if "Loopback66070179" not in reply_check.xml:
+                return "Cannot delete: Interface loopback 66070179 (checked by Netconf)"
+
             reply = m.edit_config(target="running", config=netconf_config)
             if '<ok/>' in reply.xml:
                 return "Interface loopback 66070179 is deleted successfully using Netconf"
@@ -81,6 +106,27 @@ def net_enable(ip):
     """
     try:
         with netconf_connect(ip) as m:
+            filter_check = """
+            <filter>
+              <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                <interface>
+                  <name>Loopback66070179</name>
+                </interface>
+              </interfaces>
+            </filter>
+            """
+            reply_check = m.get_config(source="running", filter=filter_check)
+            reply_dict = xmltodict.parse(reply_check.xml)
+            interface_data = reply_dict.get('rpc-reply', {}).get('data', {}).get('interfaces', {}).get('interface')
+
+            if not interface_data:
+                return "Cannot enable: Interface loopback 66070179 (checked by Netconf)"
+
+            current_status = interface_data.get('enabled')
+            if current_status == "true":
+                return "Cannot enable: Interface loopback 66070179 (checked by Netconf)"
+
+            
             reply = m.edit_config(target="running", config=netconf_config)
             if '<ok/>' in reply.xml:
                 return "Interface loopback 66070179 is enabled successfully using Netconf"
@@ -103,6 +149,26 @@ def net_disable(ip):
     """
     try:
         with netconf_connect(ip) as m:
+            filter_check = """
+            <filter>
+              <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                <interface>
+                  <name>Loopback66070179</name>
+                </interface>
+              </interfaces>
+            </filter>
+            """
+            reply_check = m.get_config(source="running", filter=filter_check)
+            reply_dict = xmltodict.parse(reply_check.xml)
+            interface_data = reply_dict.get('rpc-reply', {}).get('data', {}).get('interfaces', {}).get('interface')
+
+            if not interface_data:
+                return "Cannot shutdown: Interface loopback 66070179 (checked by Netconf)"
+
+            current_status = interface_data.get('enabled')
+            if current_status == "false":
+                return "Cannot shutdown: Interface loopback 66070179 (checked by Netconf)"
+
             reply = m.edit_config(target="running", config=netconf_config)
             if '<ok/>' in reply.xml:
                 return "Interface loopback 66070179 is shutdowned successfully using Netconf"
@@ -111,10 +177,6 @@ def net_disable(ip):
     except Exception as e:
         print("Error:", e)
         return "Cannot shutdown: Interface loopback 66070179 (checked by Netconf)"
-
-# def netconf_edit_config(netconf_config):
-#     return  m.<!!!REPLACEME with the proper Netconf operation!!!>(target="<!!!REPLACEME with NETCONF Datastore!!!>", config=<!!!REPLACEME with netconf_config!!!>)
-
 
 def net_status(ip):
     netconf_filter = """
