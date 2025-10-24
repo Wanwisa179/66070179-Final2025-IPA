@@ -67,7 +67,7 @@ def create(ip):
             return "Cannot create: Interface loopback 66070179"
 
 
-def delete():
+def delete(ip):
     api_url = what_ip(ip)
     resp = requests.delete(
         api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179", 
@@ -84,7 +84,7 @@ def delete():
         return "Cannot delete: Interface loopback 66070179"
 
 
-def enable():
+def enable(ip):
     api_url = what_ip(ip)
     yangConfig = {
         "ietf-interfaces:interface": {
@@ -130,7 +130,7 @@ def enable():
         return "Cannot enable: Interface loopback 66070179"
 
 
-def disable():
+def disable(ip):
     api_url = what_ip(ip)
     yangConfig = {
         "ietf-interfaces:interface": {
@@ -177,7 +177,7 @@ def disable():
         return "Cannot shutdown: Interface loopback 66070179"
 
 
-def status():
+def status(ip):
     api_url = what_ip(ip)
     resp = requests.get(
         api_url_status,

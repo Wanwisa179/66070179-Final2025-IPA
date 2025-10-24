@@ -37,9 +37,14 @@ last_message_id = None
 
 method = ""
 
+is_busy = False
+
 while True:
     # always add 1 second of delay to the loop to not go over a rate limit of API calls
     time.sleep(1)
+
+    if is_busy:
+        continue
 
     # the Webex Teams GET parameters
     #  "roomId" is the ID of the selected room
@@ -92,7 +97,7 @@ while True:
     # check if the text of the message starts with the magic character "/" followed by your studentID and a space and followed by a command name
     #  e.g.  "/66070123 create"
     if message.startswith("/66070179 "):
-
+        is_busy = True
         # extract the command
         ip = (message.split())[1]
         if ip == "restconf":
@@ -114,7 +119,7 @@ while True:
                 )
             else:
                 print("Message sent successfully!")
-
+            is_busy = False
             continue
         elif ip == "netconf":
             method = ip
@@ -135,7 +140,7 @@ while True:
                 )
             else:
                 print("Message sent successfully!")
-
+            is_busy = False
             continue
         elif method == "" and ip != "netconf" and ip != "restconf":
             sent_back = {
@@ -154,9 +159,10 @@ while True:
                 )
             else:
                 print("Message sent successfully!")
-
+            is_busy = False
             continue
-        elif ip != "10.0.15.61" or ip != "10.0.15.62" or ip != "10.0.15.63" or ip != "10.0.15.64" or ip != "10.0.15.65":
+        elif ip != "10.0.15.61" and ip != "10.0.15.62" and ip != "10.0.15.63" and ip != "10.0.15.64" and ip != "10.0.15.65":
+            print(ip)
             sent_back = {
                 "roomId": roomIdToGetMessages,
                 "text" : " Error: No IP specified"
@@ -173,6 +179,7 @@ while True:
                 )
             else:
                 print("Message sent successfully!")
+            is_busy = False
             continue
 
         command = (message.split())[2]
@@ -181,19 +188,19 @@ while True:
     # 5. Complete the logic for each command
 
         if command == "create":
-            re_data = create()   
+            re_data = create(ip)   
         elif command == "delete":
-            re_data = delete()
+            re_data = delete(ip)
         elif command == "enable":
-            re_data = enable()
+            re_data = enable(ip)
         elif command == "disable":
-            re_data = disable()
+            re_data = disable(ip)
         elif command == "status":
-            re_data = status()
+            re_data = status(ip)
         elif command == "gigabit_status":
-            re_data = gigabit_status()
+            re_data = gigabit_status(ip)
         elif command == "showrun":
-            re_data = showrun()
+            re_data = showrun(ip)
         else:
             responseMessage = "Error: No command or unknown command"
         
@@ -264,3 +271,4 @@ while True:
                 )
             else:
                 print("Message sent successfully!")
+        is_busy = False
