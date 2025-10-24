@@ -3,9 +3,7 @@ import requests
 requests.packages.urllib3.disable_warnings()
 
 # Router IP Address is 10.0.15.181-184
-api_list = {"https://10.0.15.61/restconf", "https://10.0.15.62/restconf", "https://10.0.15.63/restconf", "https://10.0.15.64/restconf", "https://10.0.15.65/restconf"}
-
-api_url_status = "https://10.0.15.61/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070179"
+api_list = ["https://10.0.15.61/restconf", "https://10.0.15.62/restconf", "https://10.0.15.63/restconf", "https://10.0.15.64/restconf", "https://10.0.15.65/restconf"]
 
 # the RESTCONF HTTP headers, including the Accept and Content-Type
 # Two YANG data formats (JSON and XML) work with RESTCONF 
@@ -41,7 +39,7 @@ def create(ip):
     } 
 
     resp = requests.get(
-        api_url_status,
+        api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179",
         auth=basicauth, 
         headers=headers, 
         verify=False
@@ -61,10 +59,10 @@ def create(ip):
 
         if(resp.status_code >= 200 and resp.status_code <= 299):
             print("STATUS OK: {}".format(resp.status_code))
-            return "Interface loopback 66070179 is created successfully"
+            return "Interface loopback 66070179 is created successfully using Restconf"
         else:
             print('Error. Status Code: {}'.format(resp.status_code))
-            return "Cannot create: Interface loopback 66070179"
+            return "Cannot create: Interface loopback 66070179 (checked by Restconf)"
 
 
 def delete(ip):
@@ -78,10 +76,10 @@ def delete(ip):
 
     if(resp.status_code >= 200 and resp.status_code <= 299):
         print("STATUS OK: {}".format(resp.status_code))
-        return "Interface loopback 66070179 is deleted successfully"
+        return "Interface loopback 66070179 is deleted successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
-        return "Cannot delete: Interface loopback 66070179"
+        return "Cannot delete: Interface loopback 66070179 (checked by Restconf)"
 
 
 def enable(ip):
@@ -105,7 +103,7 @@ def enable(ip):
     }
 
     resp = requests.get(
-        api_url_status,
+        api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179",
         auth=basicauth, 
         headers=headers, 
         verify=False
@@ -121,13 +119,13 @@ def enable(ip):
             )
         if(resp.status_code >= 200 and resp.status_code <= 299):
             print("STATUS OK: {}".format(resp.status_code))
-            return "Interface loopback 66070179 is enabled successfully"
+            return "Interface loopback 66070179 is enabled successfully using Restconf"
         else:
             print('Error. Status Code: {}'.format(resp.status_code))
-            return "Cannot enable: Interface loopback 66070179"
+            return "Cannot enable: Interface loopback 66070179 (checked by Restconf)"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
-        return "Cannot enable: Interface loopback 66070179"
+        return "Cannot enable: Interface loopback 66070179 (checked by Restconf)"
 
 
 def disable(ip):
@@ -151,7 +149,7 @@ def disable(ip):
     }
 
     resp = requests.get(
-        api_url_status,
+        api_url + "/data/ietf-interfaces:interfaces/interface=Loopback66070179",
         auth=basicauth, 
         headers=headers, 
         verify=False
@@ -168,19 +166,19 @@ def disable(ip):
 
         if(resp.status_code >= 200 and resp.status_code <= 299):
             print("STATUS OK: {}".format(resp.status_code))
-            return "Interface loopback 66070179 is shutdowned successfully"
+            return "Interface loopback 66070179 is shutdowned successfully using Restconf"
         else:
             print('Error. Status Code: {}'.format(resp.status_code))
-            return "Cannot shutdown: Interface loopback 66070179"
+            return "Cannot shutdown: Interface loopback 66070179 (checked by Restconf)"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
-        return "Cannot shutdown: Interface loopback 66070179"
+        return "Cannot shutdown: Interface loopback 66070179 (checked by Restconf)"
 
 
 def status(ip):
     api_url = what_ip(ip)
     resp = requests.get(
-        api_url_status,
+        api_url + "/data/ietf-interfaces:interfaces-state/interface=Loopback66070179",
         auth=basicauth, 
         headers=headers, 
         verify=False
@@ -192,12 +190,12 @@ def status(ip):
         admin_status = response_json["ietf-interfaces:interface"]["admin-status"]
         oper_status = response_json["ietf-interfaces:interface"]["oper-status"]
         if admin_status == 'up' and oper_status == 'up':
-            return "Interface loopback 66070179 is enabled"
+            return "Interface loopback 66070179 is enabled (checked by Restconf)"
         elif admin_status == 'down' and oper_status == 'down':
-            return "Interface loopback 66070179 is disabled"
+            return "Interface loopback 66070179 is disabled (checked by Restconf)"
     elif(resp.status_code == 404):
         print("STATUS NOT FOUND: {}".format(resp.status_code))
-        return "No Interface loopback 66070179>"
+        return "No Interface loopback 66070179 (checked by Restconf)>"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
-        return "No Interface loopback 66070179>"
+        return "No Interface loopback 66070179 (checked by Restconf)>"
