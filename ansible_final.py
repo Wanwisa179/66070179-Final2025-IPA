@@ -29,3 +29,24 @@ def showrun(ip):
             return "Error: No backup file found"
     else:
         return 'Error: Ansible'
+
+def set_motd(ip, message):
+    try:
+        command = [
+            "ansible-playbook",
+            "motd_playbook.yaml",
+            "--extra-vars",
+            f"target_ip={ip} motd_message='{message}'"
+        ]
+
+        result = subprocess.run(command, capture_output=True, text=True)
+        print(result.stdout)
+        print(result.stderr)
+
+        if "failed=0" in result.stdout:
+            return "Ok: success"
+        else:
+            return "Error: Failed to configure MOTD"
+    except Exception as e:
+        print("Error:", e)
+        return "Error: Cannot configure MOTD"

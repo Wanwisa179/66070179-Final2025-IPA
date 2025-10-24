@@ -1,5 +1,7 @@
 from netmiko import ConnectHandler
 from pprint import pprint
+import re
+
 
 username = "admin"
 password = "cisco"
@@ -38,3 +40,37 @@ def gigabit_status(ip):
         ans = ans + " -> " + str(up) + " up, " + str(down) + " down, " + str(admin_down) + " administratively down"
         pprint(ans)
         return ans
+
+def read_motd(ip):
+    device_params = {
+        "device_type": "cisco_ios",
+        "ip": ip,
+        "username": "admin",
+        "password": "cisco",
+    }
+
+    try:
+        with ConnectHandler(**device_params) as ssh:
+            # ✅ ดึงทั้ง config เลย ไม่ใช้ section/begin
+            output = ssh.send_command("show running-config")
+            print("DEBUG RAW OUTPUT:\n", repr(output))
+
+            # ✅ หาส่วน banner motd แบบแน่นอน
+            match = re.search(
+                r"banner motd\s*\^C\s*([\s\S]*?)\s*\^C",
+                output,
+                re.MULTILINE
+            )
+
+            if match:
+                motd_text = match.group(1).strip()
+                if motd_text:
+                    return motd_text
+                else:
+                    return "Error: No MOTD Configured"
+            else:
+                return "Error: No MOTD Configured"
+
+    except Exception as e:
+        print("Error:", e)
+        return "Error: Cannot read MOTD"

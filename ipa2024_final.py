@@ -12,8 +12,8 @@ import os
 
 from dotenv import load_dotenv
 from requests_toolbelt import MultipartEncoder
-from ansible_final import showrun
-from netmiko_final import gigabit_status
+from ansible_final import showrun, set_motd
+from netmiko_final import gigabit_status, read_motd
 from restconf_final import create, status, enable, disable, delete
 from netconf_final import net_create, net_delete, net_enable, net_disable, net_status
 
@@ -244,6 +244,12 @@ while True:
                         re_data = gigabit_status(ip)
                     elif command == "showrun":
                         re_data = showrun(ip)
+                    elif command == "motd":
+                        if len(parts) > 3:
+                            motd_message = " ".join(parts[3:])
+                            re_data = set_motd(ip, motd_message)
+                        else:
+                            re_data = read_motd(ip)
                     else:
                         responseMessage = "Error: No command or unknown command"
                 else:
@@ -261,6 +267,12 @@ while True:
                         re_data = gigabit_status(ip)
                     elif command == "showrun":
                         re_data = showrun(ip)
+                    elif command == "motd":
+                        if len(parts) > 3:
+                            motd_message = " ".join(parts[3:])
+                            re_data = set_motd(ip, motd_message)
+                        else:
+                            re_data = read_motd(ip)
                     else:
                         responseMessage = "Error: No command or unknown command"
 

@@ -1,8 +1,8 @@
 Building configuration...
 
-Current configuration : 4492 bytes
+Current configuration : 4509 bytes
 !
-! Last configuration change at 16:06:30 UTC Fri Oct 24 2025 by admin
+! Last configuration change at 17:14:20 UTC Fri Oct 24 2025 by NETCONF
 !
 version 16.9
 service config
@@ -191,7 +191,9 @@ control-plane
 !
 !
 !
-banner motd ^CDek NW Love Love Aj Chotipat!^C
+banner motd ^C
+Authorized users only! Managed by 66070179
+^C
 !
 line con 0
  stopbits 1
