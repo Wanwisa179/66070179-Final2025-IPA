@@ -1,1 +1,1 @@
-เกิดปัญหาตอนpushเล็กน้อยทำให้มี commit " check ip and add ip range in command " โผล่มา 5 อัน
+เกิดปัญหาตอนpushและสร้างrepoใหม่เล็กน้อยทำให้มี commit " check ip and add ip range in command " โผล่มา 5 อัน
