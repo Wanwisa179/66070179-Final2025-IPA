@@ -251,7 +251,7 @@ while True:
                         else:
                             re_data = read_motd(ip)
                     else:
-                        responseMessage = "Error: No command or unknown command"
+                        re_data = "Error: No command or unknown command"
                 else:
                     if command == "create":
                         re_data = net_create(ip)   
@@ -274,7 +274,7 @@ while True:
                         else:
                             re_data = read_motd(ip)
                     else:
-                        responseMessage = "Error: No command or unknown command"
+                        re_data = "Error: No command or unknown command"
 
                 if command == "showrun" and not re_data.startswith("Error"):
                     filename = re_data
