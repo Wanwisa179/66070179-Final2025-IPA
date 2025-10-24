@@ -15,7 +15,7 @@ from requests_toolbelt import MultipartEncoder
 from ansible_final import showrun
 from netmiko_final import gigabit_status
 from restconf_final import create, status, enable, disable, delete
-from netconf_final import net_create
+from netconf_final import net_create, net_delete
 
 #######################################################################################
 # 2. Assign the Webex access token to the variable ACCESS_TOKEN using environment variables.

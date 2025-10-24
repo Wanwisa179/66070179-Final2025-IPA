@@ -46,17 +46,26 @@ def net_create(ip):
         return "Cannot create: Interface loopback 66070179 (checked by Netconf)"
 
 
-# def net_delete():
-#     netconf_config = """<!!!REPLACEME with YANG data!!!>"""
-
-#     try:
-#         netconf_reply = netconf_edit_config(netconf_config)
-#         xml_data = netconf_reply.xml
-#         print(xml_data)
-#         if '<ok/>' in xml_data:
-#             return "<!!!REPLACEME with proper message!!!>"
-#     except:
-#         print("Error!")
+def net_delete(ip):
+    netconf_config = """
+    <config>
+      <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+        <interface operation="delete">
+          <name>Loopback66070179</name>
+        </interface>
+      </interfaces>
+    </config>
+    """
+    try:
+        with netconf_connect(ip) as m:
+            reply = m.edit_config(target="running", config=netconf_config)
+            if '<ok/>' in reply.xml:
+                return "Interface loopback 66070179 is deleted successfully using Netconf"
+            else:
+                return "Cannot delete: Interface loopback 66070179 (checked by Netconf)"
+    except Exception as e:
+        print("Error:", e)
+        return "Cannot delete: Interface loopback 66070179 (checked by Netconf)"
 
 
 # def net_enable():
