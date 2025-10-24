@@ -116,25 +116,31 @@ def net_disable(ip):
 #     return  m.<!!!REPLACEME with the proper Netconf operation!!!>(target="<!!!REPLACEME with NETCONF Datastore!!!>", config=<!!!REPLACEME with netconf_config!!!>)
 
 
-# def net_status():
-#     netconf_filter = """<!!!REPLACEME with YANG data!!!>"""
-
-#     try:
-#         # Use Netconf operational operation to get interfaces-state information
-#         netconf_reply = m.<!!!REPLACEME with the proper Netconf operation!!!>(filter=<!!!REPLACEME with netconf_filter!!!>)
-#         print(netconf_reply)
-#         netconf_reply_dict = xmltodict.<!!!REPLACEME with the proper method!!!>(netconf_reply.xml)
-
-#         # if there data return from netconf_reply_dict is not null, the operation-state of interface loopback is returned
-#         if <!!!REPLACEME with the proper condition!!!>:
-#             # extract admin_status and oper_status from netconf_reply_dict
-#             admin_status = <!!!REPLACEME!!!>
-#             oper_status = <!!!REPLACEME !!!>
-#             if admin_status == 'up' and oper_status == 'up':
-#                 return "<!!!REPLACEME with proper message!!!>"
-#             elif admin_status == 'down' and oper_status == 'down':
-#                 return "<!!!REPLACEME with proper message!!!>"
-#         else: # no operation-state data
-#             return "<!!!REPLACEME with proper message!!!>"
-#     except:
-#        print("Error!")
+def net_status(ip):
+    netconf_filter = """
+    <filter>
+      <interfaces-state xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+        <interface>
+          <name>Loopback66070179</name>
+        </interface>
+      </interfaces-state>
+    </filter>
+    """
+    try:
+        with netconf_connect(ip) as m:
+            reply = m.get(netconf_filter)
+            reply_dict = xmltodict.parse(reply.xml)
+            interface_data = reply_dict.get('rpc-reply', {}).get('data', {}).get('interfaces-state', {}).get('interface')
+            
+            if interface_data:
+                admin_status = interface_data.get('admin-status')
+                oper_status = interface_data.get('oper-status')
+                if admin_status == "up" and oper_status == "up":
+                    return "Interface loopback 66070179 is enabled (checked by Netconf)"
+                elif admin_status == "down" and oper_status == "down":
+                    return "Interface loopback 66070179 is disabled (checked by Netconf)"
+            else:
+                return "No Interface loopback 66070179 (checked by Netconf)"
+    except Exception as e:
+        print("Error:", e)
+        return "No Interface loopback 66070179 (checked by Netconf)"
